@@ -30,6 +30,7 @@ interface AddProductModalProps {
     brand: string;
     category: string;
   }) => void;
+  categories: { name: string }[];
 }
 
 export default function AddProductModal({
@@ -70,8 +71,8 @@ export default function AddProductModal({
     setFormData({
       title: "",
       description: "",
-      price: "",
-      stock: "",
+      price: 0,
+      stock: 0,
       brand: "",
       category: "",
     });

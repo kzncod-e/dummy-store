@@ -28,7 +28,13 @@ import { tree } from "next/dist/build/templates/app-page";
 
 export default function Products() {
   const { products, categories, addProduct, deleteProduct, editProduct } =
-    useStore();
+    useStore() as {
+      products: any[];
+      categories: { name: string }[];
+      addProduct: (productData: any) => void;
+      deleteProduct: (id: number) => void;
+      editProduct: (id: number, data: any) => void;
+    };
 
   const [showAddModal, setShowAddModal] = useState(false);
 

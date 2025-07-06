@@ -141,17 +141,38 @@ const useStore = create(
             0
           );
 
+          const newOrder: Order = {
+            id: Date.now().toString(),
+            date: new Date().toISOString(),
+            status: "completed",
+            totalAmount,
+            items,
+            shipping: state.checkoutOrder.shipping, // ambil data shipping dari checkoutOrder
+          };
+
           return {
+            orders: [...state.orders, newOrder],
+            cartShop: [],
             checkoutOrder: {
-              ...state.checkoutOrder,
-              id: Date.now().toString(), // ID unik
-              date: new Date().toISOString(),
-              status: "Completed",
-              items,
-              totalAmount,
+              id: "",
+              date: "",
+              status: "pending",
+              totalAmount: 0,
+              items: [],
+              shipping: {
+                firstName: "",
+                lastName: "",
+                address: "",
+                city: "",
+                province: "",
+                postalCode: "",
+                email: "",
+                phone: "",
+              },
             },
           };
         }),
+
       updateCheckoutForm: (field: keyof ShippingInfo, value: string) =>
         set((state) => {
           if (!state.checkoutOrder) return state;
@@ -177,7 +198,7 @@ const useStore = create(
         })),
 
       getOrderById: (id: string) => {
-        const state = get();
+        const state = get() as OrderStore & { orders: Order[] };
         return state.orders.find((o) => o.id === id);
       },
     }),
