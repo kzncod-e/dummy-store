@@ -33,17 +33,17 @@ const items = [
   },
   {
     title: "Shop",
-    url: "#",
+    url: "/dashboard/shop",
     icon: ShoppingBag,
   },
   {
     title: "Cart",
-    url: "#",
+    url: "/dashboard/cart",
     icon: ShoppingCart,
   },
   {
     title: "Orders",
-    url: "#",
+    url: "/dashboard/order",
     icon: History,
   },
 ];

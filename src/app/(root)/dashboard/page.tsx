@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Loader from "@/components/ui/loader";
 import useStore from "@/state";
 const barData = [
   { name: "beauty", value: 5 },
@@ -46,9 +47,11 @@ export default function Dashboard() {
   const [totalCarts, setTotalCarts] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
+        setLoading(true);
         const [usersRes, productsRes, cartsRes, categoriesRes] =
           await Promise.all([
             axios.get("https://dummyjson.com/users"),
@@ -81,6 +84,8 @@ export default function Dashboard() {
         }
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -106,6 +111,13 @@ export default function Dashboard() {
     0
   );
   const formattedRevenue = Number(totalRevenue.toFixed(2));
+  if (loading === true) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6  w-full  ">
+        <Loader />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen mx-auto px-6  w-full ">
       {/* Header */}

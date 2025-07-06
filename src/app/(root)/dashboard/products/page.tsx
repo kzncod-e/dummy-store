@@ -1,10 +1,10 @@
 "use client";
-
-import { useState } from "react";
+import { toast } from "sonner";
+import { useMemo, useState } from "react";
 import { Search, Plus, Edit, Trash2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import modalAddForm from "@/components/ui/modalAddForm";
+
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
@@ -23,13 +23,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import useStore from "@/state";
 import AddProductModal from "@/components/ui/modalAddForm";
+import Loader from "@/components/ui/loader";
+import { tree } from "next/dist/build/templates/app-page";
 
 export default function Products() {
   const { products, categories, addProduct, deleteProduct, editProduct } =
     useStore();
 
-  console.log("Products:", products);
   const [showAddModal, setShowAddModal] = useState(false);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [editingProduct, setEditingProduct] = useState<
@@ -50,19 +52,25 @@ export default function Products() {
     category: string;
   }) => {
     addProduct(productData);
+    toast.message("Product has been created", {
+      description: "New Product has been created successfully",
+    });
   };
-  const filteredProducts = products
-    ? products.filter((product) => {
-        const matchesSearch =
-          product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory =
-          selectedCategory === "all" ||
-          product.category.toLowerCase() === selectedCategory.toLowerCase();
-        return matchesSearch && matchesCategory;
-      })
-    : [];
 
+  const filteredProducts = useMemo(() => {
+    if (!products) return [];
+    return products.filter((product) => {
+      const matchesSearch =
+        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesCategory =
+        selectedCategory === "all" ||
+        product.category.toLowerCase() === selectedCategory.toLowerCase();
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, searchTerm, selectedCategory]);
   const renderStars = (rating: number) => {
     return (
       <div className="flex items-center gap-1">
@@ -96,6 +104,9 @@ export default function Products() {
       price: 0,
       stock: 0,
     });
+    toast.message("Prouct has been updated", {
+      description: "product updated successfully  ",
+    });
   };
 
   const handleCloseModal = () => {
@@ -111,9 +122,13 @@ export default function Products() {
   const handleDeleteProduct = (id: number) => {
     // Here you would typically delete the product from your database
     deleteProduct(id);
+    toast.message("Product has been deleted", {
+      description: "Product deleted successfully  ",
+    });
   };
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen relative bg-gray-50 p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -226,7 +241,12 @@ export default function Products() {
       </div>
 
       {/* Empty State */}
-      {filteredProducts.length === 0 && (
+      {products.length === 0 && (
+        <div className="min-h-screen w-full flex items-center justify-center mx-auto absolute inset-0  ">
+          <Loader />
+        </div>
+      )}
+      {filteredProducts.length === 0 && products.length > 0 && (
         <div className="text-center py-12">
           <div className="text-gray-400 mb-4">
             <Search className="h-12 w-12 mx-auto" />
