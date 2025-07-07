@@ -4,6 +4,8 @@ import {
   Package,
   ChartColumn,
   History,
+  User,
+  LogOut,
 } from "lucide-react";
 
 import {
@@ -18,8 +20,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-
+import Cookies from "js-cookie";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 // Menu items.
+
 const items = [
   {
     title: "Dashboard",
@@ -47,7 +59,12 @@ const items = [
     icon: History,
   },
 ];
-
+const handleLogout = () => {
+  Cookies.remove("token");
+  Cookies.remove("firstName");
+  Cookies.remove("lastName");
+  window.location.href = "/sign-in";
+};
 export function AppSidebar({
   firstName,
   lastName,
@@ -87,9 +104,35 @@ export function AppSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <h1>
-          {firstName} {lastName}
-        </h1>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex items-center gap-2">
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <h1>
+                {firstName} {lastName}
+              </h1>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <div className="flex items-center gap-2">
+                <User />
+                <span>Profile</span>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
+              <div className="flex  items-center gap-2">
+                <LogOut />
+                <p>Logout</p>
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarFooter>
     </Sidebar>
   );

@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { toast } from "sonner";
 import useStore, { Order, ShippingInfo } from "@/state";
+import { useRouter } from "next/navigation";
 
 interface CartItem {
   id: number;
@@ -23,17 +24,26 @@ interface CartItem {
 export default function CheckoutPage() {
   const {
     cartShop,
-    addOrder,
     updateCheckoutForm,
     checkoutOrder,
     prepareCheckoutOrderFromCart,
-  }: { checkoutOrder: Order } = useStore();
+  } = useStore() as {
+    cartShop: CartItem[];
+    updateCheckoutForm: (field: string, value: string) => void;
+    checkoutOrder: Order;
+    // Add other properties of checkoutOrder if needed
 
+    prepareCheckoutOrderFromCart: () => void;
+  };
+  const router = useRouter();
   const subtotal = cartShop.reduce((sum, item) => sum + item.total, 0);
   const shipping: number = 0;
   const tax = 7.99;
   const total = subtotal + tax + shipping;
-
+  const handleCheckout = () => {
+    prepareCheckoutOrderFromCart();
+    router.push("/dashboard/order"); // redirect ke /orders
+  };
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
@@ -283,7 +293,7 @@ export default function CheckoutPage() {
                 {/* Complete Order Button */}
                 <Button
                   className="w-full bg-gray-900 hover:bg-gray-800 text-white py-3 mt-6"
-                  onClick={prepareCheckoutOrderFromCart}>
+                  onClick={handleCheckout}>
                   Complete Order
                 </Button>
               </CardContent>

@@ -150,20 +150,21 @@ export default function OrderDetailsModal({
           {/* Shipping Information */}
           <div>
             <h3 className="font-semibold text-gray-900 mb-4">
-              Shipping Information
+              {order.shipping.firstName} {order.shipping.lastName}'s Shipping
+              Information
             </h3>
             <div className="bg-gray-50 p-4 rounded-lg space-y-2">
               <p className="font-medium text-gray-900">
-                {orderData.shipping.name}
+                {order.shipping.firstName} {order.shipping.lastName}
               </p>
-              <p className="text-gray-700">{orderData.shipping.address}</p>
-              <p className="text-gray-700">{orderData.shipping.city}</p>
+              <p className="text-gray-700">{order.shipping.address}</p>
+              <p className="text-gray-700">{order.shipping.city}</p>
               <div className="pt-2 space-y-1">
                 <p className="text-sm text-gray-600">
-                  Email: {orderData.shipping.email}
+                  Email: {order.shipping.email}
                 </p>
                 <p className="text-sm text-gray-600">
-                  Phone: {orderData.shipping.phone}
+                  Phone: {order.shipping.phone}
                 </p>
               </div>
             </div>
