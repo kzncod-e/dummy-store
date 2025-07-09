@@ -15,6 +15,15 @@ import {
 } from "@/components/ui/select";
 
 import useStore from "@/state";
+
+// Define the shape of your store state
+type StoreState = {
+  products: any[];
+  categories: { name: string }[];
+  cartShop: any[];
+  addCart: (product: any) => void;
+};
+
 import { toast } from "sonner";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +31,7 @@ import axios from "axios";
 import Loader from "@/components/ui/loader";
 
 export default function Products() {
-  const { products, categories, cartShop, addCart } = useStore();
+  const { products, categories, cartShop, addCart } = useStore() as StoreState;
 
   console.log("Products:", products);
 
