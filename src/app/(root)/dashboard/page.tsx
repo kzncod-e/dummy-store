@@ -25,12 +25,24 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "@/components/ui/loader";
 import useStore from "@/state";
+
+// Define the expected shape of your store
+type StoreType = {
+  carts: any[];
+  setCarts: (carts: any[]) => void;
+  products: any[];
+  setProducts: (products: any[]) => void;
+  categories: any[];
+  setCategories: (categories: any[]) => void;
+};
+
+// Use the correct type for destructuring
 const barData = [
   { name: "beauty", value: 5 },
   { name: "fragrances", value: 5 },
   { name: "furniture", value: 5 },
-  { name: "groceries", value: 15 },
 ];
+
 const COLORS = ["#FF8042", "#0088FE", "#00C49F", "#FFBB28"];
 const chartColors = {
   bar: "#8884d8",
@@ -42,8 +54,7 @@ const chartColors = {
 export default function Dashboard() {
   const [users, setUsers] = useState([]);
   const { carts, setCarts, products, setProducts, setCategories, categories } =
-    useStore();
-
+    useStore() as StoreType;
   const [totalCarts, setTotalCarts] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
@@ -244,7 +255,7 @@ export default function Dashboard() {
                       data={productDistribution}
                       cx="50%"
                       cy="50%"
-                      label={({ name, percent }) =>
+                      label={({ name, percent = 0 }) =>
                         `${name} ${(percent * 100).toFixed(0)}%`
                       }
                       outerRadius={100}
