@@ -19,7 +19,11 @@ interface CartItem {
   thumbnail: string;
 }
 export default function CartPage() {
-  const { cartShop, deleteCart, editCartQuantity } = useStore();
+  const { cartShop, deleteCart, editCartQuantity } = useStore() as {
+    cartShop: CartItem[];
+    deleteCart: (id: number) => void;
+    editCartQuantity: (id: number, quantity: number) => void;
+  };
 
   const removeItem = (id: number) => {
     deleteCart(id);
